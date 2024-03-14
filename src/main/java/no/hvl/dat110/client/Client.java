@@ -6,9 +6,9 @@ import no.hvl.dat110.messagetransport.MessagingClient;
 
 public class Client extends Thread {
 
-	private MessagingClient client;
+	private final MessagingClient client;
 	private Connection connection;
-	private String user;
+	private final String user;
 
 	public Client(String user, String server, int port) {
 		client = new MessagingClient(server, port);

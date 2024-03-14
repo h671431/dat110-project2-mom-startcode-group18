@@ -32,9 +32,9 @@ public class Connection {
 
 	public void send(TransportMessage message) {
 
-		// TODO 
+		// TODO
 		// encapsulate the data contained in the message and write to the output stream
-		
+
 		try {
 
 			byte[] sendbuf = message.encapsulate();
@@ -50,19 +50,19 @@ public class Connection {
 	}
 
 	public boolean hasData () {
-		
+
 		boolean hasdata = false;
-		
+
 		try {
-			
+
 			hasdata = inStream.available() > 0;
-			
+
 		} catch (IOException ex) {
 
 			System.out.println("Connection: " + ex.getMessage());
 			ex.printStackTrace();
 		}
-		
+
 		return hasdata;
 	}
 
@@ -70,39 +70,39 @@ public class Connection {
 
 		TransportMessage message;
 		byte[] recvbuf;
-		
+
 		// TODO
 		// read a segment from the input stream and decapsulate into message
-		
+
 		recvbuf = new byte[MessageConfig.SEGMENTSIZE];
-		
+
 		try {
-				
+
 			int read = inStream.read(recvbuf,0,MessageConfig.SEGMENTSIZE);
-			
+
 			if (read != MessageConfig.SEGMENTSIZE) {
 				throw new IOException("receive - missing data");
 			}
-				
+
 		} catch (IOException ex) {
 
 			System.out.println("Connection: " + ex.getMessage());
 			// ex.printStackTrace();
 		}
-		
+
 		message = new TransportMessage();
-		
+
 		message.decapsulate(recvbuf);
-		
+
 		return message;
-		
+
 	}
 
 	// close the connection by closing streams and the underlying socket
 	public void close() {
 
 		try {
-			
+
 			outStream.close();
 			inStream.close();
 

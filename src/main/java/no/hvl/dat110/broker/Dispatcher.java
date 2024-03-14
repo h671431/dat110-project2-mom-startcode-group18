@@ -11,7 +11,7 @@ import no.hvl.dat110.messagetransport.Connection;
 
 public class Dispatcher extends Stopable {
 
-	private Storage storage;
+	private final Storage storage;
 
 	public Dispatcher(Storage storage) {
 		super("Dispatcher");
@@ -53,33 +53,33 @@ public class Dispatcher extends Stopable {
 		// invoke the appropriate handler method
 		switch (type) {
 
-		case DISCONNECT:
-			onDisconnect((DisconnectMsg) msg);
-			break;
+			case DISCONNECT:
+				onDisconnect((DisconnectMsg) msg);
+				break;
 
-		case CREATETOPIC:
-			onCreateTopic((CreateTopicMsg) msg);
-			break;
+			case CREATETOPIC:
+				onCreateTopic((CreateTopicMsg) msg);
+				break;
 
-		case DELETETOPIC:
-			onDeleteTopic((DeleteTopicMsg) msg);
-			break;
+			case DELETETOPIC:
+				onDeleteTopic((DeleteTopicMsg) msg);
+				break;
 
-		case SUBSCRIBE:
-			onSubscribe((SubscribeMsg) msg);
-			break;
+			case SUBSCRIBE:
+				onSubscribe((SubscribeMsg) msg);
+				break;
 
-		case UNSUBSCRIBE:
-			onUnsubscribe((UnsubscribeMsg) msg);
-			break;
+			case UNSUBSCRIBE:
+				onUnsubscribe((UnsubscribeMsg) msg);
+				break;
 
-		case PUBLISH:
-			onPublish((PublishMsg) msg);
-			break;
+			case PUBLISH:
+				onPublish((PublishMsg) msg);
+				break;
 
-		default:
-			Logger.log("broker dispatch - unhandled message type");
-			break;
+			default:
+				Logger.log("broker dispatch - unhandled message type");
+				break;
 
 		}
 	}
@@ -89,7 +89,7 @@ public class Dispatcher extends Stopable {
 
 		String user = msg.getUser();
 
-		Logger.log("onConnect:" + msg.toString());
+		Logger.log("onConnect:" + msg);
 
 		storage.addClientSession(user, connection);
 
@@ -100,7 +100,7 @@ public class Dispatcher extends Stopable {
 
 		String user = msg.getUser();
 
-		Logger.log("onDisconnect:" + msg.toString());
+		Logger.log("onDisconnect:" + msg);
 
 		storage.removeClientSession(user);
 
@@ -110,10 +110,14 @@ public class Dispatcher extends Stopable {
 
 		Logger.log("onCreateTopic:" + msg.toString());
 
-		// TODO: create the topic in the broker storage
-		// the topic is contained in the create topic message
+		//Hent ut overskriftens navn fra CreateTopicMsg
+		String topic = msg.getTopic();
 
-		throw new UnsupportedOperationException(TODO.method());
+		//Lager en overskrift i broker storage
+		storage.createTopic(topic);
+
+		//Lager en melding for å indikere at overskriften har blitt laget
+		Logger.log("Overskriften med navn: " + topic + " er blitt opprettet");
 
 	}
 
@@ -121,20 +125,29 @@ public class Dispatcher extends Stopable {
 
 		Logger.log("onDeleteTopic:" + msg.toString());
 
-		// TODO: delete the topic from the broker storage
-		// the topic is contained in the delete topic message
-		
-		throw new UnsupportedOperationException(TODO.method());
+		//Henter ut overskrifts navnet fra DeleteTopigMsg
+		String topic = msg.getTopicName();
+
+		//Sletter overskriften fra broker storage
+		storage.deleteTopic(topic);
+
+		//LAger en melding for å informere om at overskriften er slettet
+		Logger.log("Overskriften med navn: " + topic + " er nå slettet");
 	}
 
 	public void onSubscribe(SubscribeMsg msg) {
 
 		Logger.log("onSubscribe:" + msg.toString());
 
-		// TODO: subscribe user to the topic
-		// user and topic is contained in the subscribe message
-		
-		throw new UnsupportedOperationException(TODO.method());
+		//Henter ut brukeren og overskriften fra SubscribeMsg
+		String user = msg.getUser();
+		String topic = msg.getTopicName();
+
+		//Subscriber brukeren til overskriften i broker storage
+		storage.addSubscriber(user, topic);
+
+		//Lager en melding for å informere om at bruker har begynt å subscribe
+		Logger.log("Bruker '" + user + "'har begynt å abbonere på emnet '" + topic + "'.");
 
 	}
 
@@ -142,21 +155,26 @@ public class Dispatcher extends Stopable {
 
 		Logger.log("onUnsubscribe:" + msg.toString());
 
-		// TODO: unsubscribe user to the topic
-		// user and topic is contained in the unsubscribe message
-		
-		throw new UnsupportedOperationException(TODO.method());
+		//Henter ut brukeren fra overskriten fra UnsubscribeMsg
+		String user = msg.getUser();
+		String topic = msg.getTopicName();
+
+		//Unsubscriber brukeren fra overskriften i broker storage
+		storage.removeSubscriber(user, topic);
+
+		//Lager en melding for å informere om at brukeren har sluttet å abbonere
+		Logger.log("Bruker '" + user + "' har sluttet å abonnere på emnet '" + topic + "'.");
+
 	}
 
 	public void onPublish(PublishMsg msg) {
 
 		Logger.log("onPublish:" + msg.toString());
 
-		// TODO: publish the message to clients subscribed to the topic
-		// topic and message is contained in the subscribe message
-		// messages must be sent using the corresponding client session objects
-		
-		throw new UnsupportedOperationException(TODO.method());
+		Set<String> subscribers=storage.getSubscribers(msg.getTopicName());
 
+		for(String user : subscribers) {
+			storage.getSession(user).send(msg);
+		}
 	}
 }
