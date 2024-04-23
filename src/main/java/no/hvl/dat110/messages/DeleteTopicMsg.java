@@ -2,22 +2,17 @@ package no.hvl.dat110.messages;
 
 public class DeleteTopicMsg extends Message {
     private String topicName;
-
     // message sent from client to create topic on the broker
 
-    /**
-     * Bodil har endret
-     * @param user
-     * @param topic
-     */
     public DeleteTopicMsg(String user, String topic) {
 
         super(MessageType.DELETETOPIC,user);
         this.topicName = topic;
+        //konstruktør
     }
-    /*
-     * Task A - getter og setter + toString
-     */
+
+    //Task A - getter og setter + toString
+
     public String getTopicName() {
         return topicName;
     }

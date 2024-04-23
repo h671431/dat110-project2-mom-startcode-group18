@@ -11,9 +11,10 @@ public class PublishMsg extends Message {
 		super(MessageType.PUBLISH, user);
 		this.topicName = topicName;
 		this.message = message;
+		//konstruktør
 	}
 
-
+	//task a - getter & setter + toString
 	public String getMessage() {
 
 		return message;

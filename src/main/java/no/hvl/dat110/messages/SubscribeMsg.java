@@ -6,21 +6,16 @@ public class SubscribeMsg extends Message {
 
     private String topicName;
 
-    /**
-     * Bodil har endret
-     * @param user
-     * @param topic
-     */
     public SubscribeMsg(String user, String topic) {
 
         super(MessageType.SUBSCRIBE, user);
         this.topicName = topic;
+        //konstruktør
     }
 
 
-    /*
-     * Task A - getter og setter + toString
-     */
+    //Task A - getter og setter + toString
+
     public String getTopicName() {
         return topicName;
     }

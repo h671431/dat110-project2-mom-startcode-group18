@@ -5,21 +5,15 @@ public class UnsubscribeMsg extends Message {
     // message sent from client to unsubscribe on a topic
     private String topicName;
 
-    /**
-     * Bodil endret
-     * @param user
-     * @param topic
-     */
     public UnsubscribeMsg(String user, String topic) {
 
         super(MessageType.UNSUBSCRIBE, user);
         this.topicName = topic;
+        //konstruktør
     }
 
+    //Task A - getter og setter + toString
 
-    /*
-     * Task A - getter og setter + toString
-     */
     public String getTopicName() {
         return topicName;
     }

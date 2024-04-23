@@ -64,8 +64,8 @@ public class Storage {
 
 	public void removeClientSession(String user) {
 /*
-Frakobler clienten tilhørende den gitte brukeren og
-fjerner den tilhørende client session fra storage
+Frakobler klienten tilhørende den gitte brukeren og
+fjerner den tilhørende klient session fra storage
  */
 		// Get the client session associated with the given user
 		ClientSession clientSession = clients.get(user);

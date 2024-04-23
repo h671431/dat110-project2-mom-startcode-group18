@@ -7,13 +7,10 @@ public class CreateTopicMsg extends Message {
     public CreateTopicMsg(String user, String topic) {
         super(MessageType.CREATETOPIC, user);
         this.topic = topic;
-
+        //konstruktør
     }
 
-
-    /*
-     * Så vidt startet på Task A - getter + setter og toString
-     */
+    //task a - getter og setter + tostring
     public String getTopic() {
         return topic;
     }
